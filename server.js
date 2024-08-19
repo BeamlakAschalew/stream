@@ -5,7 +5,8 @@ import axios from "axios";
 // Replace with your Telegram RTMP URL
 const TELEGRAM_RTMP_URL =
   "rtmps://dc4-1.rtmp.t.me/s/1949099143:QQN1e5SShF0SqnyMeTC56A";
-const M3U8_URL = "https://live.tv247us.com/hls/discovery.m3u8";
+const M3U8_URL =
+  "https://stream-akamai.castr.com/5b9352dbda7b8c769937e459/live_2361c920455111ea85db6911fe397b9e/index.fmp4.m3u8";
 
 // Function to stream m3u8 to Telegram Live using FFmpeg
 async function streamToTelegram() {

@@ -32,35 +32,33 @@ app.get("/start-stream", (req, res) => {
     "-reconnect_streamed",
     "1",
     "-reconnect_delay_max",
-    "5", // Increased to allow more time for reconnections
+    "2",
     "-i",
     m3u8Url,
-    "-vf",
-    "scale=320:240", // Further reduced resolution to 240p
     "-c:v",
     "libx264",
     "-preset",
-    "ultrafast",
+    "fast", // Using 'fast' preset for better quality while still optimizing for performance
     "-tune",
-    "zerolatency",
+    "zerolatency", // Reduces latency, helpful for live streaming
     "-g",
-    "25",
+    "50",
     "-bufsize",
-    "500k", // Reduced buffer size
+    "10000k", // Increased buffer size
     "-b:v",
-    "300k", // Further reduced video bitrate
+    "4000k", // Increased video bitrate for better quality
     "-r",
-    "20", // Frame rate stays at 20 fps
+    "30", // Increased frame rate to 30 fps
     "-c:a",
     "aac",
     "-b:a",
-    "48k", // Further reduced audio bitrate
+    "192k", // Increased audio bitrate
     "-ac",
-    "1", // Mono audio
+    "2", // Stereo audio
     "-f",
     "flv",
     "-threads",
-    "1",
+    "2", // Utilize both cores
     telegramRtmpUrl,
   ]);
 
