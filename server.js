@@ -4,8 +4,8 @@ import axios from "axios";
 // Replace with your Telegram RTMP URL
 // Replace with your Telegram RTMP URL
 const TELEGRAM_RTMP_URL =
-  "rtmps://dc4-1.rtmp.t.me/s/1949099143:QQN1e5SShF0SqnyMeTC56A";
-const M3U8_URL = "https://live.tv247us.com/hls/discovery.m3u8";
+  "rtmps://dc4-1.rtmp.t.me/s/2198776956:nZwbOPKP_HysUsnjE0S0Ng";
+const M3U8_URL = "https://xcdn.bong.ink/hls/bong1.m3u8";
 
 // Function to stream m3u8 to Telegram Live using FFmpeg
 async function streamToTelegram() {
@@ -16,15 +16,27 @@ async function streamToTelegram() {
       console.log("Streaming started...");
 
       // Spawn FFmpeg process
+      // const ffmpeg = spawn("ffmpeg", [
+      //   "-re",
+      //   "-i",
+      //   M3U8_URL,
+      //   "-c",
+      //   "copy",
+      //   "-f",
+      //   "flv",
+      //   TELEGRAM_RTMP_URL,
+      // ]);
+
       const ffmpeg = spawn("ffmpeg", [
-        "-re",
         "-i",
-        M3U8_URL,
-        "-c",
-        "copy",
+        M3U8_URL, // Input m3u8 URL
+        "-c:v",
+        "copy", // Copy video codec without re-encoding
+        "-c:a",
+        "copy", // Copy audio codec without re-encoding
         "-f",
-        "flv",
-        TELEGRAM_RTMP_URL,
+        "flv", // Format for streaming to RTMP
+        TELEGRAM_RTMP_URL, // Telegram RTMP URL
       ]);
 
       ffmpeg.stdout.on("data", (data) => {
