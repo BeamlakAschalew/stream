@@ -32,11 +32,11 @@ app.get("/start-stream", (req, res) => {
     "-reconnect_streamed",
     "1",
     "-reconnect_delay_max",
-    "2",
+    "5", // Increased to allow more time for reconnections
     "-i",
     m3u8Url,
     "-vf",
-    "scale=640:360", // Lower the resolution to 360p
+    "scale=320:240", // Further reduced resolution to 240p
     "-c:v",
     "libx264",
     "-preset",
@@ -46,15 +46,15 @@ app.get("/start-stream", (req, res) => {
     "-g",
     "25",
     "-bufsize",
-    "1000k", // Further reduced buffer size
+    "500k", // Reduced buffer size
     "-b:v",
-    "500k", // Lowered video bitrate to 500k
+    "300k", // Further reduced video bitrate
     "-r",
-    "20", // Reduced frame rate to 20 fps
+    "20", // Frame rate stays at 20 fps
     "-c:a",
     "aac",
     "-b:a",
-    "64k", // Lowered audio bitrate
+    "48k", // Further reduced audio bitrate
     "-ac",
     "1", // Mono audio
     "-f",
