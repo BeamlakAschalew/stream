@@ -22,6 +22,46 @@ app.get("/start-stream", (req, res) => {
   const telegramRtmpUrl = `rtmps://dc4-1.rtmp.t.me/s/${telegramKey}`;
 
   // Start the FFmpeg process
+  // ffmpeg = spawn("ffmpeg", [
+  //   "-fflags",
+  //   "+nobuffer",
+  //   "-fflags",
+  //   "discardcorrupt",
+  //   "-reconnect",
+  //   "1",
+  //   "-reconnect_streamed",
+  //   "1",
+  //   "-reconnect_delay_max",
+  //   "2",
+  //   "-i",
+  //   m3u8Url,
+  //   "-c:v",
+  //   "libx264",
+  //   "-preset",
+  //   "fast", // Using 'fast' preset for better quality while still optimizing for performance
+  //   "-tune",
+  //   "zerolatency", // Reduces latency, helpful for live streaming
+  //   "-g",
+  //   "50",
+  //   "-bufsize",
+  //   "10000k", // Increased buffer size
+  //   "-b:v",
+  //   "4000k", // Increased video bitrate for better quality
+  //   "-r",
+  //   "30", // Increased frame rate to 30 fps
+  //   "-c:a",
+  //   "aac",
+  //   "-b:a",
+  //   "192k", // Increased audio bitrate
+  //   "-ac",
+  //   "2", // Stereo audio
+  //   "-f",
+  //   "flv",
+  //   "-threads",
+  //   "2", // Utilize both cores
+  //   telegramRtmpUrl,
+  // ]);
+
   ffmpeg = spawn("ffmpeg", [
     "-fflags",
     "+nobuffer",
@@ -32,35 +72,35 @@ app.get("/start-stream", (req, res) => {
     "-reconnect_streamed",
     "1",
     "-reconnect_delay_max",
-    "5", // Increased to allow more time for reconnections
+    "2",
     "-i",
     m3u8Url,
-    "-vf",
-    "scale=320:240", // Further reduced resolution to 240p
     "-c:v",
     "libx264",
     "-preset",
-    "ultrafast",
+    "veryfast", // Use a faster preset to reduce CPU load
     "-tune",
-    "zerolatency",
+    "zerolatency", // Reduces latency
     "-g",
-    "25",
-    "-bufsize",
-    "500k", // Reduced buffer size
-    "-b:v",
-    "300k", // Further reduced video bitrate
+    "60", // Adjusted keyframe interval
     "-r",
-    "20", // Frame rate stays at 20 fps
+    "30", // Set frame rate to 30 fps
+    "-bufsize",
+    "5000k", // Decreased buffer size for lower latency
+    "-b:v",
+    "3500k", // Adjusted video bitrate for a balance between quality and performance
+    "-maxrate",
+    "3500k", // Set max bitrate
     "-c:a",
     "aac",
     "-b:a",
-    "48k", // Further reduced audio bitrate
+    "128k", // Lowered audio bitrate to reduce overall bandwidth
     "-ac",
-    "1", // Mono audio
+    "2", // Stereo audio
     "-f",
     "flv",
     "-threads",
-    "1",
+    "4", // Increase thread usage if the server has multiple cores
     telegramRtmpUrl,
   ]);
 
