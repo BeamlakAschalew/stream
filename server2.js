@@ -23,21 +23,37 @@ app.get("/start-stream", (req, res) => {
 
   // Start the FFmpeg process
   ffmpeg = spawn("ffmpeg", [
+    "-fflags",
+    "+nobuffer",
+    "-fflags",
+    "discardcorrupt",
+    "-reconnect",
+    "1",
+    "-reconnect_streamed",
+    "1",
+    "-reconnect_delay_max",
+    "2",
     "-i",
-    m3u8Url, // Input from the m3u8 stream
+    m3u8Url,
     "-c:v",
-    "libx264", // Video codec
+    "libx264",
     "-preset",
-    "veryfast", // Speed of encoding
+    "superfast",
+    "-g",
+    "50",
+    "-bufsize",
+    "6000k",
     "-b:v",
-    "3000k", // Bitrate
+    "3000k",
     "-c:a",
-    "aac", // Audio codec
+    "aac",
     "-b:a",
-    "160k", // Audio bitrate
+    "160k",
     "-f",
-    "flv", // Output format
-    telegramRtmpUrl, // Output to Telegram RTMP
+    "flv",
+    "-threads",
+    "2",
+    telegramRtmpUrl,
   ]);
 
   isStreaming = true;
