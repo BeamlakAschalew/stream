@@ -35,24 +35,32 @@ app.get("/start-stream", (req, res) => {
     "2",
     "-i",
     m3u8Url,
+    "-vf",
+    "scale=640:360", // Lower the resolution to 360p
     "-c:v",
     "libx264",
     "-preset",
-    "superfast",
+    "ultrafast",
+    "-tune",
+    "zerolatency",
     "-g",
-    "50",
+    "25",
     "-bufsize",
-    "6000k",
+    "1000k", // Further reduced buffer size
     "-b:v",
-    "3000k",
+    "500k", // Lowered video bitrate to 500k
+    "-r",
+    "20", // Reduced frame rate to 20 fps
     "-c:a",
     "aac",
     "-b:a",
-    "160k",
+    "64k", // Lowered audio bitrate
+    "-ac",
+    "1", // Mono audio
     "-f",
     "flv",
     "-threads",
-    "2",
+    "1",
     telegramRtmpUrl,
   ]);
 
