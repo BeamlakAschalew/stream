@@ -7,8 +7,9 @@ const port = process.env.PORT || 3000;
 let ffmpeg;
 let isStreaming = false;
 let retryCount = 0;
-const maxRetries = 5;
+const maxRetries = 15;
 const retryDelay = 5000; // 5 seconds delay before retrying
+let stoppedStream = false;
 
 // Function to start streaming
 function startStreaming(m3u8Url, telegramRtmpUrl) {
@@ -64,13 +65,14 @@ function startStreaming(m3u8Url, telegramRtmpUrl) {
   ffmpeg.on("close", (code) => {
     console.log(`FFmpeg process closed with code ${code}`);
     isStreaming = false;
-    retryStream(m3u8Url, telegramRtmpUrl); // Attempt to restart the stream
+    if (!stoppedStream) {
+      retryStream(m3u8Url, telegramRtmpUrl); // Attempt to restart the stream
+    }
   });
 }
 
 // Function to retry streaming
 function retryStream(m3u8Url, telegramRtmpUrl) {
-  retryCount = 0;
   if (retryCount < maxRetries) {
     retryCount++;
     console.log(`Retrying stream... Attempt ${retryCount}/${maxRetries}`);
@@ -104,6 +106,7 @@ app.get("/start-stream", (req, res) => {
 
 app.get("/stop-stream", (req, res) => {
   if (isStreaming && ffmpeg) {
+    stoppedStream = true;
     ffmpeg.kill("SIGINT"); // Gracefully stop the FFmpeg process
     isStreaming = false;
     retryCount = maxRetries; // Prevent retries after manual stop
