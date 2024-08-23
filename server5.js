@@ -57,8 +57,10 @@ function startStreaming(id, m3u8Url, telegramRtmpUrl) {
 
   ffmpeg.on("close", (code) => {
     console.log(`FFmpeg process for stream ${id} closed with code ${code}`);
-    streams[id].isStreaming = false;
-    retryStream(id, m3u8Url, telegramRtmpUrl);
+    if (streams[id]) {
+      streams[id].isStreaming = false;
+      retryStream(id, m3u8Url, telegramRtmpUrl);
+    }
   });
 }
 
@@ -67,7 +69,7 @@ function retryStream(id, m3u8Url, telegramRtmpUrl) {
   const maxRetries = 15;
   const retryDelay = 5000;
 
-  if (streams[id].retryCount < maxRetries) {
+  if (streams[id] && streams[id].retryCount < maxRetries) {
     streams[id].retryCount++;
     console.log(
       `Retrying stream ${id}... Attempt ${streams[id].retryCount}/${maxRetries}`

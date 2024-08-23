@@ -2,16 +2,15 @@ import express from "express";
 import { spawn } from "child_process";
 
 const app = express();
-const port = process.env.PORT || 3200;
+const port = process.env.PORT || 3003;
 
 let ffmpeg;
 let isStreaming = false;
 let retryCount = 0;
 const maxRetries = 15;
-const retryDelay = 5000; // 5 seconds delay before retrying
+const retryDelay = 5000;
 let stoppedStream = false;
 
-// Function to start streaming
 function startStreaming(m3u8Url, telegramRtmpUrl) {
   ffmpeg = spawn("ffmpeg", [
     "-fflags",
@@ -66,14 +65,13 @@ function startStreaming(m3u8Url, telegramRtmpUrl) {
     console.log(`FFmpeg process closed with code ${code}`);
     isStreaming = false;
     if (!stoppedStream) {
-      retryStream(m3u8Url, telegramRtmpUrl); // Attempt to restart the stream
+      retryStream(m3u8Url, telegramRtmpUrl);
     }
   });
 }
 
 // Function to retry streaming
 function retryStream(m3u8Url, telegramRtmpUrl) {
-  retryCount = 0;
   if (retryCount < maxRetries) {
     retryCount++;
     console.log(`Retrying stream... Attempt ${retryCount}/${maxRetries}`);
@@ -98,7 +96,7 @@ app.get("/start-stream", (req, res) => {
   }
 
   const telegramRtmpUrl = `rtmps://dc4-1.rtmp.t.me/s/${telegramKey}`;
-  retryCount = 0; // Reset retry count on a new start
+  retryCount = 0;
 
   startStreaming(m3u8Url, telegramRtmpUrl);
 
