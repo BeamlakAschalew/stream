@@ -25,17 +25,17 @@ function startStreaming(m3u8Url, telegramRtmpUrl) {
     "-reconnect_streamed",
     "1",
     "-reconnect_delay_max",
-    "2",
+    "5", // Increased delay before reconnecting
     "-i",
     m3u8Url,
     "-i",
-    fullLogoPath, // Input the logo file from the project directory
+    fullLogoPath,
     "-filter_complex",
     "[1:v]scale=150:150[logo];[0:v][logo]overlay=W-w-10:H-h-10",
     "-c:v",
     "libx264",
     "-preset",
-    "veryfast",
+    "superfast", // Reduced preset to reduce CPU load
     "-tune",
     "zerolatency",
     "-g",
@@ -43,11 +43,11 @@ function startStreaming(m3u8Url, telegramRtmpUrl) {
     "-r",
     "30",
     "-bufsize",
-    "5000k",
+    "7000k", // Increased buffer size
     "-b:v",
-    "3500k",
+    "3000k", // Slightly reduced bitrate to ease the load
     "-maxrate",
-    "3500k",
+    "3000k",
     "-c:a",
     "aac",
     "-b:a",
